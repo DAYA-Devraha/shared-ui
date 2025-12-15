@@ -52,3 +52,6 @@ export { PasswordInput } from './components/password-input';
 
 // TypewriterEffect
 export { TypewriterEffect } from './components/typewriter-effect';
+
+// ErrorBoundary
+export { ErrorBoundary } from './components/error-boundary';
