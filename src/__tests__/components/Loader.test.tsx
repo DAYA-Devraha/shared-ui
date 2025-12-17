@@ -78,7 +78,7 @@ describe('Loader', () => {
   it('cleans up gsap context on unmount', async () => {
     const revertMock = vi.fn()
     const { gsap } = await import('gsap')
-    vi.mocked(gsap.context).mockReturnValue({ revert: revertMock })
+    vi.mocked(gsap.context).mockReturnValue({ revert: revertMock } as unknown as ReturnType<typeof gsap.context>)
 
     const { unmount } = render(<Loader />)
     unmount()
