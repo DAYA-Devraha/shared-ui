@@ -45,7 +45,7 @@ jobs:
               "action": "${{ steps.action.outputs.action }}",
               "commit": "${{ github.sha }}",
               "author": "${{ github.actor }}",
-              "message": "${{ github.event.head_commit.message }}"
+              "message": ${{ toJSON(github.event.head_commit.message) }}
             }
 
       - name: Summary
