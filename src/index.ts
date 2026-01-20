@@ -55,3 +55,6 @@ export { TypewriterEffect } from './components/typewriter-effect';
 
 // ErrorBoundary
 export { ErrorBoundary } from './components/error-boundary';
+
+// ThemeProvider
+export { ThemeProvider } from './components/theme-provider';
