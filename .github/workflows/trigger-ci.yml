@@ -1,0 +1,61 @@
+# Шаблон для добавления в каждый репозиторий
+# Копировать в: <repo>/.github/workflows/trigger-ci.yml
+#
+# Этот workflow отправляет событие в daya-ci при push/PR
+
+name: Trigger CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  trigger:
+    name: Trigger daya-ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine action
+        id: action
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          EVENT="${{ github.event_name }}"
+
+          if [ "$EVENT" = "pull_request" ]; then
+            echo "action=test" >> $GITHUB_OUTPUT
+          elif [ "$BRANCH" = "main" ]; then
+            echo "action=deploy-prod" >> $GITHUB_OUTPUT
+          elif [ "$BRANCH" = "dev" ]; then
+            echo "action=deploy-dev" >> $GITHUB_OUTPUT
+          else
+            echo "action=test" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Trigger daya-ci
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          repository: DAYA-Devraha/daya-ci
+          event-type: ci-trigger
+          client-payload: |
+            {
+              "repository": "${{ github.event.repository.name }}",
+              "branch": "${{ github.ref_name }}",
+              "action": "${{ steps.action.outputs.action }}",
+              "commit": "${{ github.sha }}",
+              "author": "${{ github.actor }}",
+              "message": "${{ github.event.head_commit.message }}"
+            }
+
+      - name: Summary
+        run: |
+          echo "## CI Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| | |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| Repository | ${{ github.event.repository.name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Action | ${{ steps.action.outputs.action }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [View in daya-ci](https://github.com/DAYA-Devraha/daya-ci/actions)" >> $GITHUB_STEP_SUMMARY
