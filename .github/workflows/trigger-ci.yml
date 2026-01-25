@@ -32,6 +32,9 @@ jobs:
             echo "action=test" >> $GITHUB_OUTPUT
           fi
 
+          # Short commit SHA
+          echo "commit_short=${GITHUB_SHA:0:7}" >> $GITHUB_OUTPUT
+
       - name: Trigger daya-ci
         uses: peter-evans/repository-dispatch@v3
         with:
@@ -44,6 +47,7 @@ jobs:
               "branch": "${{ github.ref_name }}",
               "action": "${{ steps.action.outputs.action }}",
               "commit": "${{ github.sha }}",
+              "commit_short": "${{ steps.action.outputs.commit_short }}",
               "author": "${{ github.actor }}",
               "message": ${{ toJSON(github.event.head_commit.message) }}
             }
