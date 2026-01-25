@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { format } from 'date-fns';
+import { format, startOfDay } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button } from './button';
@@ -54,8 +54,9 @@ export function DatePicker({
             setOpen(false);
           }}
           disabled={(date) => {
-            if (minDate && date < minDate) return true;
-            if (maxDate && date > maxDate) return true;
+            const dateStart = startOfDay(date);
+            if (minDate && dateStart < startOfDay(minDate)) return true;
+            if (maxDate && dateStart > startOfDay(maxDate)) return true;
             return false;
           }}
           defaultMonth={value || minDate || new Date()}
