@@ -58,3 +58,10 @@ export { ErrorBoundary } from './components/error-boundary';
 
 // ThemeProvider
 export { ThemeProvider } from './components/theme-provider';
+
+// Calendar
+export { Calendar, CalendarDayButton } from './components/calendar';
+
+// DatePicker
+export { DatePicker } from './components/date-picker';
+export type { DatePickerProps } from './components/date-picker';
