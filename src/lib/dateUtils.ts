@@ -91,3 +91,38 @@ export function formatDateOnlyDisplay(
   const months = format === 'long' ? monthsLong : monthsShort;
   return `${day} ${months[monthIndex]} ${year}`;
 }
+
+/**
+ * Parse a UTC ISO date string and return a local Date for use in DatePicker.
+ * This ensures the DatePicker displays the same date as formatDateOnlyDisplay.
+ *
+ * Problem: DatePicker uses local timezone. If we pass new Date("2026-01-10T00:00:00Z"),
+ * it might show Jan 9 or Jan 10 depending on timezone.
+ *
+ * Solution: Extract UTC date components and create a local Date with those values.
+ *
+ * @param isoString - ISO date string from API (e.g., "2026-01-10T18:30:00.000Z")
+ * @returns Local Date object that will display as the UTC date in DatePicker
+ *
+ * @example
+ * // DB has "2026-01-10T18:30:00.000Z" (Jan 10 UTC, Jan 11 in IST)
+ * // formatDateOnlyDisplay shows "10 Jan 2026"
+ * // parseUTCDateForPicker returns Date that DatePicker shows as "Jan 10, 2026"
+ */
+export function parseUTCDateForPicker(
+  isoString: string | undefined | null,
+): Date | undefined {
+  if (!isoString) return undefined;
+
+  const utcDate = new Date(isoString);
+  if (isNaN(utcDate.getTime())) return undefined;
+
+  // Create local Date with UTC date components
+  // Use noon (12:00) to avoid edge cases with DST changes
+  return new Date(
+    utcDate.getUTCFullYear(),
+    utcDate.getUTCMonth(),
+    utcDate.getUTCDate(),
+    12, 0, 0
+  );
+}

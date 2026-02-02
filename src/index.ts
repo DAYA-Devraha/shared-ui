@@ -7,6 +7,7 @@ export {
   parseDateStringUTC,
   getTodayLocalDateString,
   formatDateOnlyDisplay,
+  parseUTCDateForPicker,
 } from './lib/dateUtils';
 
 // Button
