@@ -1,6 +1,14 @@
 // Utility functions
 export { cn } from './lib/utils';
 
+// Date utilities for consistent timezone handling
+export {
+  formatLocalDateOnly,
+  parseDateStringUTC,
+  getTodayLocalDateString,
+  formatDateOnlyDisplay,
+} from './lib/dateUtils';
+
 // Button
 export { Button, buttonVariants } from './components/button';
 export type { ButtonProps, ButtonIconProps } from './components/button';
