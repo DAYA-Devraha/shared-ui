@@ -16,6 +16,8 @@ export interface DatePickerProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  /** Date format string for date-fns. Default: 'PP' (e.g., "Jan 10, 2026"). Use 'P' for shorter format (e.g., "01/10/2026"). */
+  dateFormat?: string;
 }
 
 export function DatePicker({
@@ -26,6 +28,7 @@ export function DatePicker({
   placeholder = 'Pick a date',
   className,
   disabled,
+  dateFormat = 'PP',
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -42,7 +45,7 @@ export function DatePicker({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, 'PP') : <span>{placeholder}</span>}
+          {value ? format(value, dateFormat) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
